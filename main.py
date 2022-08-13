@@ -72,6 +72,17 @@ class Person(BaseModel):
         default=None,
         example="https://www.platzi.com"
     )
+    
+    class Config:
+        schema_extra = {
+            "example": {
+                "first_name": "Facundo",
+                "last_name": "García",
+                "age": 21,
+                "hair_color": "blonde",
+                "is_married": False
+            }
+        }
 
 
 @app.get('/')
