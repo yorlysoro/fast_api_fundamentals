@@ -11,7 +11,9 @@ from fastapi import (
     Body,
     Query,
     Path,
-    status)
+    status,
+    Form)
+from starlette.types import Message
 
 app = FastAPI(debug=True)
 
@@ -81,7 +83,18 @@ class PersonBase(BaseModel):
 
 class Person(PersonBase):
     password: str = Field(..., min_length=8)
-    
+
+
+class LoginOut(BaseModel):
+    username: str = Field(
+        ...,
+        max_length=20,
+        example="miguel2021"
+    )
+    message: str = Field(
+        default="Login successfully!"
+    )
+
 
 @app.get(
     path='/',
@@ -145,3 +158,12 @@ def update_person(
     results = person.dict()
     results.update(location.dict())
     return results
+
+
+@app.post(
+    path="/login",
+    response_model=LoginOut,
+    status_code=status.HTTP_200_OK
+)
+def login(username: str = Form(...), password: str = Form(...)):
+    return LoginOut(username=username)
