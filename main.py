@@ -3,7 +3,7 @@ from typing import Optional
 from enum import Enum
 
 # Pydantic
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr, HttpUrl
 
 # FastAPI
 from fastapi import FastAPI, Body, Query, Path
@@ -63,6 +63,14 @@ class Person(BaseModel):
     is_married: Optional[bool] = Field(
         default=None,
         example=False
+    )
+    email: Optional[EmailStr] = Field(
+        default=None,
+        example="miguel@hola.com"
+    )
+    website: Optional[HttpUrl] = Field(
+        default=None,
+        example="https://www.platzi.com"
     )
 
 
