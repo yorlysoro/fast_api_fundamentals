@@ -104,17 +104,19 @@ def show_person(name: Optional[str] = Query(None,
                                             min_length=1,
                                             max_length=50,
                                             title="Person Name",
-                                            description="This is the person name. It's between 1 and 50 characters"),
+                                            description="This is the person name. It's between 1 and 50 characters",
+                                            example="Rocío"),
                 age: str = Query(...,
                                  title="Person Age",
-                                 description="This is the person age. It's required")):
+                                 description="This is the person age. It's required",
+                                 example=25)):
     return {name: age}
 
 # Validaciones: Path parameters
 
 
 @app.get("/person/detail/{person_id}")
-def show_person2(person_id: int = Path(..., gt=0)):
+def show_person2(person_id: int = Path(..., gt=0, example=123)):
     return {person_id: "It exists!"}
 
 # Validaciones: Request Body
@@ -126,7 +128,8 @@ def update_person(
         ...,
         title="Person ID",
         description="This is the person ID",
-        gt=0
+        gt=0,
+        example=123
     ),
     person: Person = Body(...),
     location: Location = Body(...)
