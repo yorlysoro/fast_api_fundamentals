@@ -6,7 +6,12 @@ from enum import Enum
 from pydantic import BaseModel, Field, EmailStr, HttpUrl
 
 # FastAPI
-from fastapi import FastAPI, Body, Query, Path
+from fastapi import (
+    FastAPI,
+    Body,
+    Query,
+    Path,
+    status)
 
 app = FastAPI(debug=True)
 
@@ -78,22 +83,31 @@ class Person(PersonBase):
     password: str = Field(..., min_length=8)
     
 
-@app.get('/')
+@app.get(
+    path='/',
+    status_code=status.HTTP_200_OK
+)
 def index():
     return {'Hello': 'World!'}
 
 
 # Request and Response Body
 
-@app.post("/person/new",
-          response_model=PersonBase)
+@app.post(
+    path="/person/new",
+    response_model=PersonBase,
+    status_code=status.HTTP_201_CREATED
+)
 def create_person(person: Person = Body(...)):
     return person
 
 # Validaciones: Query Parameters
 
 
-@app.get('/person/detail')
+@app.get(
+    path='/person/detail',
+    status_code=status.HTTP_200_OK
+)
 def show_person(name: Optional[str] = Query(None,
                                             min_length=1,
                                             max_length=50,
