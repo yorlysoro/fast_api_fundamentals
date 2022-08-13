@@ -74,7 +74,7 @@ class PersonBase(BaseModel):
     )
 
 
-class PersonOut(PersonBase):
+class Person(PersonBase):
     password: str = Field(..., min_length=8)
     
 
@@ -87,7 +87,7 @@ def index():
 
 @app.post("/person/new",
           response_model=PersonBase)
-def create_person(person: PersonOut = Body(...)):
+def create_person(person: Person = Body(...)):
     return person
 
 # Validaciones: Query Parameters
