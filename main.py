@@ -39,7 +39,7 @@ class Location(BaseModel):
     )
 
 
-class Person(BaseModel):
+class PersonBase(BaseModel):
     first_name: str = Field(
         min_length=1,
         max_length=50,
@@ -72,54 +72,11 @@ class Person(BaseModel):
         default=None,
         example="https://www.platzi.com"
     )
+
+
+class PersonOut(PersonBase):
     password: str = Field(..., min_length=8)
-
-
-class PersonOut(BaseModel):
-    first_name: str = Field(
-        min_length=1,
-        max_length=50,
-        example="Miguel"
-    )
-    last_name: str = Field(
-        min_length=1,
-        max_length=50,
-        example="Torres"
-    )
-    age: int = Field(
-        ...,
-        gt=0,
-        le=115,
-        example=25
-    )
-    hair_color: Optional[HairColor] = Field(
-        default=None,
-        example=HairColor.black
-    )
-    is_married: Optional[bool] = Field(
-        default=None,
-        example=False
-    )
-    email: Optional[EmailStr] = Field(
-        default=None,
-        example="miguel@hola.com"
-    )
-    website: Optional[HttpUrl] = Field(
-        default=None,
-        example="https://www.platzi.com"
-    )
     
-    class Config:
-        schema_extra = {
-            "example": {
-                "first_name": "Facundo",
-                "last_name": "García",
-                "age": 21,
-                "hair_color": "blonde",
-                "is_married": False
-            }
-        }
-
 
 @app.get('/')
 def index():
@@ -128,8 +85,9 @@ def index():
 
 # Request and Response Body
 
-@app.post("/person/new", response_model=PersonOut)
-def create_person(person: Person = Body(...)):
+@app.post("/person/new",
+          response_model=PersonBase)
+def create_person(person: PersonOut = Body(...)):
     return person
 
 # Validaciones: Query Parameters
@@ -167,7 +125,7 @@ def update_person(
         gt=0,
         example=123
     ),
-    person: Person = Body(...),
+    person: PersonBase = Body(...),
     location: Location = Body(...)
 ):
     results = person.dict()
