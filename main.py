@@ -21,7 +21,8 @@ from fastapi import (
     Header,
     Cookie,
     UploadFile,
-    File)
+    File,
+    HTTPException)
 from starlette.types import Message
 
 app = FastAPI(debug=True)
@@ -145,8 +146,20 @@ def show_person(name: Optional[str] = Query(None,
 # Validaciones: Path parameters
 
 
+persons = [1, 2, 3, 4, 5]
+
+
 @app.get("/person/detail/{person_id}")
-def show_person2(person_id: int = Path(..., gt=0, example=123)):
+def show_person2(
+    person_id: int = Path(
+        ...,
+        gt=0,
+        example=123)):
+    if person_id not in persons:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="This person doesn't exist!"
+        )
     return {person_id: "It exists!"}
 
 # Validaciones: Request Body
