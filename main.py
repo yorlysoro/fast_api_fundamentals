@@ -1,6 +1,6 @@
 # Python
 
-from os import stat
+from os import path, stat
 from typing import Optional
 from enum import Enum
 
@@ -121,7 +121,8 @@ def index():
     path="/person/new",
     response_model=PersonBase,
     status_code=status.HTTP_201_CREATED,
-    tags=["Persons"]
+    tags=["Persons"],
+    summary="Create Person in the app"
 )
 def create_person(person: Person = Body(...)):
     """
@@ -140,7 +141,8 @@ def create_person(person: Person = Body(...)):
 @app.get(
     path='/person/detail',
     status_code=status.HTTP_200_OK,
-    tags=["Persons"]
+    tags=["Persons"],
+    deprecated=True
 )
 def show_person(name: Optional[str] = Query(None,
                                             min_length=1,
