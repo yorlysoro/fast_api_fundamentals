@@ -108,7 +108,8 @@ class LoginOut(BaseModel):
 
 @app.get(
     path='/',
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=["Landing Pages"]
 )
 def index():
     return {'Hello': 'World!'}
@@ -119,9 +120,18 @@ def index():
 @app.post(
     path="/person/new",
     response_model=PersonBase,
-    status_code=status.HTTP_201_CREATED
+    status_code=status.HTTP_201_CREATED,
+    tags=["Persons"]
 )
 def create_person(person: Person = Body(...)):
+    """
+    Create Person
+    This path operation creates a person in the app and save the information in the database
+    Parameters: 
+    - Request body parameter: 
+        - **person: Person** -> A person model with first name, last name, age, hair color and marital stauts
+    Returns a person model with first name, last name, age, hair color and marital status
+    """
     return person
 
 # Validaciones: Query Parameters
@@ -129,7 +139,8 @@ def create_person(person: Person = Body(...)):
 
 @app.get(
     path='/person/detail',
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=["Persons"]
 )
 def show_person(name: Optional[str] = Query(None,
                                             min_length=1,
@@ -149,7 +160,10 @@ def show_person(name: Optional[str] = Query(None,
 persons = [1, 2, 3, 4, 5]
 
 
-@app.get("/person/detail/{person_id}")
+@app.get(
+    path="/person/detail/{person_id}",
+    tags=["Persons"]
+)
 def show_person2(
     person_id: int = Path(
         ...,
@@ -165,7 +179,10 @@ def show_person2(
 # Validaciones: Request Body
 
 
-@app.put("/person/{person_id}")
+@app.put(
+    path="/person/{person_id}",
+    tags=["Persons"]
+)
 def update_person(
     person_id: int = Path(
         ...,
@@ -185,7 +202,8 @@ def update_person(
 @app.post(
     path="/login",
     response_model=LoginOut,
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=["Persons"]
 )
 def login(username: str = Form(...), password: str = Form(...)):
     return LoginOut(username=username)
@@ -195,7 +213,8 @@ def login(username: str = Form(...), password: str = Form(...)):
 
 @app.post(
     path="/contact",
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=["Contacts"]
 )
 def contact(
     first_name: str = Form(
@@ -215,7 +234,8 @@ def contact(
 
 
 @app.post(
-    path="/post-image"
+    path="/post-image",
+    tags=["Files"]
 )
 def post_image(
     image: UploadFile = File(...)
